@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -93,7 +94,11 @@ public class PositionControllerTest {
     void createPositionTest() throws Exception {
         // Fixtures
         PositionRequest request = randomPositionRequest();
-        Position position = modelPosition();
+        ModelMapper modelMapper = new ModelMapper();
+//        Position position = modelPosition();
+
+        Position position = modelMapper.map(request, Position.class);
+        position.buildId();
 
         // Mocks
         when(serviceMock.create(any(PositionRequest.class))).thenReturn(position);
@@ -106,12 +111,13 @@ public class PositionControllerTest {
                         .content(asJson(request)))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("plate").exists())
-                .andExpect(jsonPath("datePosition").exists())
-                .andExpect(jsonPath("speed").exists())
-                .andExpect(jsonPath("longitude").exists())
-                .andExpect(jsonPath("latitude").exists())
-                .andExpect(jsonPath("ignition").exists());
+                .andExpect(jsonPath("positionId").exists())
+                .andExpect(jsonPath("plate").value(position.getPlate()))
+                .andExpect(jsonPath("datePosition").value(position.getDatePosition().toString()))
+                .andExpect(jsonPath("speed").value(position.getSpeed()))
+                .andExpect(jsonPath("longitude").value(position.getLongitude()))
+                .andExpect(jsonPath("latitude").value(position.getLatitude()))
+                .andExpect(jsonPath("ignition").value(position.getIgnition()));
 
     }
 

@@ -1,8 +1,18 @@
+#maven
 HELP.md
 target/
+.mvn/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+
+.DS_Store
+
+*.class
+
+bin/
+.settings/
 
 ### STS ###
 .apt_generated
@@ -31,3 +41,18 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+atlassian-ide-plugin.xml
+
+# Maven files
+target/
+
+# Package Files #
+*.jar
+*.war
+*.ear

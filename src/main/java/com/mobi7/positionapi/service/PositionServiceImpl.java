@@ -37,6 +37,10 @@ public class PositionServiceImpl implements PositionService {
         return repository.save(position);
     }
 
+    public List<Position> getAllPositions() {
+        return repository.findAll(); // Assuming you have a JPA repository named positionRepository
+    }
+
 
     public List<PositionRequest> parseCSV(MultipartFile file) throws IOException {
         List<PositionRequest> positionRequests = new ArrayList<>();

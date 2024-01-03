@@ -32,6 +32,12 @@ public class PositionController {
         return new ResponseEntity<>(model, HttpStatus.CREATED);
     }
 
+    @GetMapping("/positions")
+    public ResponseEntity<List<Position>> getAllPositions() {
+        List<Position> positions = service.getAllPositions();
+        return new ResponseEntity<>(positions, HttpStatus.OK);
+    }
+
     @PostMapping("/importPositions")
     public ResponseEntity<List<Position>> importPositions(@RequestParam("file") MultipartFile file) {
         try {

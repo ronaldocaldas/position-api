@@ -10,4 +10,9 @@ public class PositionApiApplicationTest {
     public void contextLoads() {
         // This test ensures that the Spring application context loads successfully
     }
+
+    @Test
+    void mainMethodRuns() {
+        PositionApiApplication.main(new String[]{});
+    }
 }

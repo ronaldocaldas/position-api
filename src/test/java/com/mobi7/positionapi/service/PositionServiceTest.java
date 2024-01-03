@@ -17,9 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -29,7 +31,7 @@ import static org.mockito.Mockito.*;
 public class PositionServiceTest {
 
     @Autowired
-    private PositionService service;
+    private PositionService positionServiceMock;
 
     @MockBean
     private PositionRepository repositoryMock;
@@ -54,7 +56,7 @@ public class PositionServiceTest {
         generator = new EasyRandom(parameters);
     }
 
-    @DisplayName("Create")
+    @DisplayName("CreateService")
     @Nested
     class CrudCreate {
 
@@ -66,11 +68,34 @@ public class PositionServiceTest {
             when(repositoryMock.save(any(Position.class))).then(AdditionalAnswers.returnsFirstArg());
 
             // When
-            Position positionSaved = service.create(request);
+            Position positionSaved = positionServiceMock.create(request);
 
             // Then
             assertPositionFields(positionSaved, request);
             verify(repositoryMock, times(1)).save(any(Position.class));
+        }
+
+
+        @Test
+        @DisplayName("Should retrieve all positions")
+        void getAllPositionsTest() {
+            // Given
+            List<Position> positions = Arrays.asList(
+                    generator.nextObject(Position.class),
+                    generator.nextObject(Position.class),
+                    generator.nextObject(Position.class)
+            );
+
+            when(repositoryMock.findAll()).thenReturn(positions);
+
+            // When
+            List<Position> retrievedPositions = positionServiceMock.getAllPositions();
+
+            // Then
+            assertEquals(positions.size(), retrievedPositions.size());
+            assertThat(retrievedPositions).isEqualTo(positions);
+
+            verify(repositoryMock, times(1)).findAll();
         }
 
 
@@ -85,7 +110,7 @@ public class PositionServiceTest {
         }
     }
 
-    @DisplayName("Import")
+    @DisplayName("ImportService")
     @Nested
     class ImportFile {
         @Test
@@ -96,7 +121,7 @@ public class PositionServiceTest {
                     "ABC123,Wed Dec 12 2018 00:04:03 GMT-0200 (Hora oficial do Brasil),60,10.0,20.0,true");
 
             // When
-            List<PositionRequest> positionRequests = service.parseCSV(file);
+            List<PositionRequest> positionRequests = positionServiceMock.parseCSV(file);
 
             // Then
             assertThat(positionRequests).hasSize(1);
@@ -108,7 +133,6 @@ public class PositionServiceTest {
             assertThat(request.getLatitude()).isEqualTo(20.0);
             assertThat(request.getIgnition()).isTrue();
         }
-
         private MultipartFile createMockMultipartFile(String content) throws IOException {
             return new MockMultipartFile("file.csv", content.getBytes());
         }

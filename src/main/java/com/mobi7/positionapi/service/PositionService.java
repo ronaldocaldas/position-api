@@ -12,4 +12,6 @@ public interface PositionService {
     Position create(PositionRequest request) throws Exception;
 
     List<PositionRequest> parseCSV(MultipartFile file) throws IOException;
+
+    List<Position> getAllPositions();
 }

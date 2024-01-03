@@ -123,7 +123,17 @@ public class PositionControllerTest {
 
     @Test
     @DisplayName("Should throw validation error")
-    void createInvalidPositionTest() {
+    void createInvalidPositionTest() throws Exception {
+        // Fixtures
+        PositionRequest request = new PositionRequest();
+        // Test
+        mockMvc.perform(post("/position")
+                        .characterEncoding("UTF-8")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(asJson(request)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
 
 
     }

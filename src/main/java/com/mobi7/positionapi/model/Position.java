@@ -1,30 +1,22 @@
 package com.mobi7.positionapi.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import nonapi.io.github.classgraph.json.Id;
 
-import java.time.Instant;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Position {
+public class Position extends PositionBody {
 
     @Id
     private String positionId;
 
-    private String plate;
-
-    private Instant datePosition;
-
-    private Integer speed;
-
-    private double latitude;
-    private double longitude;
-
-    private Boolean ignition;
 
     /**
      * Build model id

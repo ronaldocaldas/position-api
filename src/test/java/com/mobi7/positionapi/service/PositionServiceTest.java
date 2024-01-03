@@ -17,9 +17,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-
 @ActiveProfiles("unit-test")
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -58,15 +60,23 @@ public class PositionServiceTest {
     @DisplayName("Should save a position")
     void savePositionTest() throws Exception {
         // fixtures
-        Position position;
+        Position positionSaved;
         PositionRequest request = generator.nextObject(PositionRequest.class);
 
         // Mocks
         when(repositoryMock.save(any(Position.class))).then(AdditionalAnswers.returnsFirstArg());
 
-        //Test
-        position = service.create(request);
+        // Test
+        positionSaved = service.create(request);
 
+        // Assertions
+        assertThat(positionSaved.getPositionId()).isNotNull();
+        assertThat(positionSaved.getDatePosition(), equalTo(request.getDatePosition()));
+        assertThat(positionSaved.getPlate(), equalTo(request.getPlate()));
+        assertThat(positionSaved.getLongitude(), equalTo(request.getLongitude()));
+        assertThat(positionSaved.getLatitude(), equalTo(request.getLatitude()));
+        assertThat(positionSaved.getSpeed(), equalTo(request.getSpeed()));
+        assertThat(positionSaved.getIgnition(), equalTo(request.getIgnition()));
 
         verify(repositoryMock, times(1)).save(any(Position.class));
 

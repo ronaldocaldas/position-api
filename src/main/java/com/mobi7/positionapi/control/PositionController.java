@@ -10,6 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(produces = "application/json; charset=UTF-8")
@@ -26,6 +30,23 @@ public class PositionController {
             throws Exception {
         Position model = service.create(positionRequest);
         return new ResponseEntity<>(model, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/importPositions")
+    public ResponseEntity<List<Position>> importPositions(@RequestParam("file") MultipartFile file) {
+        try {
+            List<PositionRequest> positionRequests = service.parseCSV(file);
+            List<Position> positions = new ArrayList<>();
+
+            for (PositionRequest positionRequest : positionRequests) {
+                Position model = service.create(positionRequest);
+                positions.add(model);
+            }
+
+            return new ResponseEntity<>(positions, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 

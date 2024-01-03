@@ -24,13 +24,6 @@ public class Position {
     @Column
     private String positionId;
 
-    /**
-     * Build model id
-     */
-    public void buildId() {
-        this.positionId = UUID.randomUUID()
-                .toString();
-    }
 
     private String plate;
     private Instant datePosition;
@@ -39,4 +32,11 @@ public class Position {
     private double longitude;
     private Boolean ignition;
 
+    /**
+     * Build model id
+     */
+    public void buildId() {
+        this.positionId = UUID.randomUUID()
+                .toString();
+    }
 }

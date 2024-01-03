@@ -1,0 +1,6 @@
+placa,data_posicao,velocidade,longitude,latitude,ignicao
+TESTE001,Wed Dec 12 2018 00:04:03 GMT-0200 (Hora oficial do Brasil),0,-51.469891,-25.3649141,false
+TESTE001,Wed Dec 12 2018 00:34:06 GMT-0200 (Hora oficial do Brasil),0,-51.4699098,-25.3649175,false
+TESTE001,Wed Dec 12 2018 01:04:09 GMT-0200 (Hora oficial do Brasil),0,-51.4699588,-25.3649551,false
+TESTE001,Wed Dec 12 2018 01:34:12 GMT-0200 (Hora oficial do Brasil),0,-51.4698871,-25.3649138,false
+TESTE001,Wed Dec 12 2018 02:04:15 GMT-0200 (Hora oficial do Brasil),0,-51.4699223,-25.364885,false

@@ -1,22 +1,28 @@
 package com.mobi7.positionapi.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import nonapi.io.github.classgraph.json.Id;
 
+import java.time.Instant;
 import java.util.UUID;
 
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Position extends PositionBody {
+@Table(name = "position")
+public class Position {
 
     @Id
+    @Column
     private String positionId;
-
 
     /**
      * Build model id
@@ -26,6 +32,11 @@ public class Position extends PositionBody {
                 .toString();
     }
 
-
+    private String plate;
+    private Instant datePosition;
+    private Integer speed;
+    private double latitude;
+    private double longitude;
+    private Boolean ignition;
 
 }

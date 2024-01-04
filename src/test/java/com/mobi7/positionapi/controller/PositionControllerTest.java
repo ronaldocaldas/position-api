@@ -6,6 +6,7 @@ import com.mobi7.positionapi.control.PositionController;
 import com.mobi7.positionapi.model.Position;
 import com.mobi7.positionapi.model.PositionRequest;
 import com.mobi7.positionapi.service.PositionService;
+import com.mobi7.positionapi.utils.DateUtils;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.*;
@@ -33,11 +34,10 @@ import java.util.UUID;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PositionController.class)
 @ExtendWith(SpringExtension.class)
@@ -121,7 +121,6 @@ public class PositionControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-
     @Test
     @DisplayName("Should retrieve all positions with success")
     void getAllPositionsTest() throws Exception {
@@ -182,7 +181,7 @@ public class PositionControllerTest {
             when(serviceMock.create(any(PositionRequest.class))).thenReturn(position1, position2);
 
             // Then
-            mockMvc.perform(MockMvcRequestBuilders.multipart("/position/importPositions")
+            mockMvc.perform(MockMvcRequestBuilders.multipart("/position/import")
                             .file(file)
                             .contentType(MediaType.MULTIPART_FORM_DATA))
                     .andDo(print())
@@ -202,7 +201,62 @@ public class PositionControllerTest {
                     .andExpect(jsonPath("$[1].latitude").value(positions.get(1).getLatitude()))
                     .andExpect(jsonPath("$[1].ignition").value(positions.get(1).getIgnition()));
         }
+        @DisplayName("FilterController")
+        @Nested
+        class Filter {
+            @Test
+            void testGetPositionsFilteredByPlatAndDatePosition() throws Exception {
+                // Mock data
+                Position position1 = createRandomPosition();
+                Position position2 = createRandomPosition();
+                List<Position> filteredPositions = Arrays.asList(position1, position2);
 
+                // Mocking the service behavior
+                when(serviceMock.getFilteredPositions(any(), any())).thenReturn(filteredPositions);
+
+                mockMvc.perform(MockMvcRequestBuilders.get("/position/positions/filter")
+                                .param("plate", position1.getPlate())
+                                .param("datePosition", DateUtils.formatInstant(position1.getDatePosition()))
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(content().json(objectMapper.writeValueAsString(filteredPositions)));
+            }
+
+            @Test
+            void testGetPositionsFilteredByPlat() throws Exception {
+                // Mock data
+                Position position1 = createRandomPosition();
+                Position position2 = createRandomPosition();
+                List<Position> filteredPositions = Arrays.asList(position1, position2);
+
+                // Mocking the service behavior
+                when(serviceMock.getFilteredPositions(any(), any())).thenReturn(filteredPositions);
+
+                mockMvc.perform(MockMvcRequestBuilders.get("/position/positions/filter")
+                                .param("plate", position1.getPlate())
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(content().json(objectMapper.writeValueAsString(filteredPositions)));
+            }
+
+            @Test
+            void testGetPositionsFilteredByDatePosition() throws Exception {
+                // Mock data
+                Position position1 = createRandomPosition();
+                Position position2 = createRandomPosition();
+                List<Position> filteredPositions = Arrays.asList(position1, position2);
+
+                // Mocking the service behavior
+                when(serviceMock.getFilteredPositions(any(), any())).thenReturn(filteredPositions);
+
+                mockMvc.perform(MockMvcRequestBuilders.get("/position/positions/filter")
+                                .param("datePosition", DateUtils.formatInstant(position1.getDatePosition()))
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(content().json(objectMapper.writeValueAsString(filteredPositions)));
+            }
+
+        }
 
         @Test
         @DisplayName("Should handle exception during importPositions")
@@ -215,7 +269,7 @@ public class PositionControllerTest {
                     .thenThrow(new RuntimeException("Simulated exception"));
 
             // When and Then
-            mockMvc.perform(MockMvcRequestBuilders.multipart("/position/importPositions")
+            mockMvc.perform(MockMvcRequestBuilders.multipart("/position/import")
                             .file("file", mockFile.getBytes())
                             .contentType(MediaType.MULTIPART_FORM_DATA))
                     .andExpect(status().isInternalServerError());

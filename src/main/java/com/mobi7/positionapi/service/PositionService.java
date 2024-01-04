@@ -5,6 +5,7 @@ import com.mobi7.positionapi.model.PositionRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface PositionService {
@@ -14,4 +15,6 @@ public interface PositionService {
     List<PositionRequest> parseCSV(MultipartFile file) throws IOException;
 
     List<Position> getAllPositions();
+
+    List<Position> getFilteredPositions(String plate, LocalDate datePosition);
 }

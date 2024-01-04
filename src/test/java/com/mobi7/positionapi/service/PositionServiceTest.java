@@ -7,6 +7,8 @@ import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.*;
 import org.mockito.AdditionalAnswers;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,6 +41,16 @@ public class PositionServiceTest {
     private PositionRepository repositoryMock;
 
     private static EasyRandom generator;
+
+    @Captor
+    private ArgumentCaptor<String> plateCaptor;
+
+    @Captor
+    private ArgumentCaptor<LocalDate> localDateCaptor;
+
+    @Captor
+    private ArgumentCaptor<Instant> instantCaptor;
+
 
     @BeforeEach
     public void setUp() {
@@ -98,6 +112,50 @@ public class PositionServiceTest {
             verify(repositoryMock, times(1)).findAll();
         }
 
+        @Test
+        public void testGetFilteredPositions() {
+            // Mock data
+            Position position1 = Position.builder().speed(100).plate("ABC123").positionId("any").datePosition(Instant.parse("2018-12-12T02:04:03Z")).build();
+            Position position2 = Position.builder().speed(100).plate("ABC123").positionId("any").datePosition(Instant.parse("2018-12-13T02:04:03Z")).build();
+            Position position3 = Position.builder().speed(100).plate("DEF456").positionId("any").datePosition(Instant.parse("2018-12-12T02:04:03Z")).build();
+            Position position4 = Position.builder().speed(100).plate("DEF456").positionId("any").datePosition(Instant.parse("2018-12-13T02:04:03Z")).build();
+
+            // Mocking repository behavior
+            when(repositoryMock.findByPlateAndDatePosition("ABC123", LocalDate.of(2018, 12, 12))).thenReturn(Arrays.asList(position1, position2));
+            when(repositoryMock.findByPlate("ABC123")).thenReturn(Arrays.asList(position1, position2));
+
+            // Convert Instant to LocalDate before passing to findByDatePosition
+            LocalDate localDateForDatePosition = Instant.parse("2018-12-13T02:04:03Z")
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            when(repositoryMock.findByDatePosition(localDateForDatePosition)).thenReturn(Arrays.asList(position2, position4));
+
+            when(repositoryMock.findAll()).thenReturn(Arrays.asList(position1, position2, position3, position4));
+
+            // Test case 1: Both plate and datePosition provided
+            List<Position> result1 = positionServiceMock.getFilteredPositions("ABC123", LocalDate.of(2018, 12, 12));
+            verify(repositoryMock).findByPlateAndDatePosition(plateCaptor.capture(), localDateCaptor.capture());
+            assertThat(plateCaptor.getValue()).isEqualTo("ABC123");
+            assertThat(localDateCaptor.getValue()).isEqualTo(LocalDate.of(2018, 12, 12));
+            assertThat(result1).isEqualTo(Arrays.asList(position1, position2));
+
+            // Test case 2: Only plate provided
+            List<Position> result2 = positionServiceMock.getFilteredPositions("ABC123", null);
+            verify(repositoryMock).findByPlate(plateCaptor.capture());
+            assertThat(plateCaptor.getValue()).isEqualTo("ABC123");
+            assertThat(result2).isEqualTo(Arrays.asList(position1, position2));
+
+            // Test case 3: Only datePosition provided
+            List<Position> result3 = positionServiceMock.getFilteredPositions(null, LocalDate.of(2018, 12, 13));
+            verify(repositoryMock).findByDatePosition(localDateCaptor.capture());
+            assertThat(localDateCaptor.getValue()).isEqualTo(LocalDate.of(2018, 12, 13));
+            assertThat(result3).isEqualTo(Arrays.asList(position2, position4));
+
+            // Test case 4: No filters provided, return all positions
+            List<Position> result4 = positionServiceMock.getFilteredPositions(null, null);
+            verify(repositoryMock).findAll();
+            assertThat(result4).isEqualTo(Arrays.asList(position1, position2, position3, position4));
+        }
 
         private void assertPositionFields(Position positionSaved, PositionRequest request) {
             assertThat(positionSaved.getPositionId()).isNotNull();

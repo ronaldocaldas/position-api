@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
@@ -38,7 +39,20 @@ public class PositionServiceImpl implements PositionService {
     }
 
     public List<Position> getAllPositions() {
-        return repository.findAll(); // Assuming you have a JPA repository named positionRepository
+        return repository.findAll();
+    }
+
+    @Override
+    public List<Position> getFilteredPositions(String plate, LocalDate datePosition) {
+        if (plate != null && datePosition != null) {
+            return repository.findByPlateAndDatePosition(plate, datePosition);
+        } else if (plate != null) {
+            return repository.findByPlate(plate);
+        } else if (datePosition != null) {
+            return repository.findByDatePosition(datePosition);
+        } else {
+            return repository.findAll();
+        }
     }
 
 
@@ -52,7 +66,6 @@ public class PositionServiceImpl implements PositionService {
 
             String line;
             while ((line = br.readLine()) != null) {
-                // Parse each line and create PositionRequest objects
                 PositionRequest positionRequest = parseLine(line);
                 positionRequests.add(positionRequest);
             }
@@ -65,9 +78,9 @@ public class PositionServiceImpl implements PositionService {
 
         String[] values = line.split(",");
 
-        // Map CSV values to PositionRequest fields
+        // Map CSV
         String plate = values[0].trim();
-        Instant datePosition = parseStringToInstant(values[1].trim()); // Assuming date is in ISO format
+        Instant datePosition = parseStringToInstant(values[1].trim());
         int speed = Integer.parseInt(values[2].trim());
         double longitude = Double.parseDouble(values[3].trim());
         double latitude = Double.parseDouble(values[4].trim());
@@ -77,7 +90,6 @@ public class PositionServiceImpl implements PositionService {
     }
 
     private Instant parseStringToInstant(String dateString) {
-        // Define a custom date format
         DateTimeFormatter formatter = new DateTimeFormatterBuilder()
                 .parseCaseInsensitive()
                 .appendPattern("EEE MMM dd yyyy HH:mm:ss 'GMT'")
@@ -85,8 +97,6 @@ public class PositionServiceImpl implements PositionService {
                 .appendLiteral(" (Hora oficial do Brasil)")
                 .toFormatter(Locale.US);
 
-
-        // Parse the string into an Instant
         return  Instant.from(formatter.parse(dateString));
 
     }

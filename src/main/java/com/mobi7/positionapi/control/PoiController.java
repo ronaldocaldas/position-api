@@ -6,10 +6,11 @@ import com.mobi7.positionapi.service.PoiService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
@@ -28,5 +29,22 @@ public class PoiController {
             throws Exception {
         Poi model = poiService.create(poiRequest);
         return new ResponseEntity<>(model, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/poi/import")
+    public ResponseEntity<List<Poi>> importPositions(@RequestParam("file") MultipartFile file) {
+        try {
+            List<PoiRequest> poiRequests = poiService.parseCSV(file);
+            List<Poi> pois = new ArrayList<>();
+
+            for (PoiRequest poiRequest : poiRequests) {
+                Poi model = poiService.create(poiRequest);
+                pois.add(model);
+            }
+
+            return new ResponseEntity<>(pois, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -5,16 +5,18 @@ import com.mobi7.positionapi.model.PoiRequest;
 import com.mobi7.positionapi.repository.PoiRepository;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.AdditionalAnswers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -69,6 +71,32 @@ public class PoiServiceTest {
         assertThat(poiSaved.getLongitude()).isEqualTo(request.getLongitude());
         assertThat(poiSaved.getLatitude()).isEqualTo(request.getLatitude());
         verify(repositoryMock, times(1)).save(any(Poi.class));
+    }
+
+    @DisplayName("ImportService")
+    @Nested
+    class ImportFile {
+        @Test
+        @DisplayName("Should parse CSV file")
+        void parseCSVTest() throws IOException {
+            // Given
+            MultipartFile file = createMockMultipartFile("name,radius,longitude,latitude\n" +
+                    "ABC123,60,10.0,20.0");
+
+            // When
+            List<PoiRequest> poiRequests = poiServiceMock.parseCSV(file);
+
+            // Then
+            assertThat(poiRequests).hasSize(1);
+            PoiRequest request = poiRequests.get(0);
+            assertThat(request.getName()).isEqualTo("ABC123");
+            assertThat(request.getRadius()).isEqualTo(60);
+            assertThat(request.getLongitude()).isEqualTo(10.0);
+            assertThat(request.getLatitude()).isEqualTo(20.0);
+        }
+        private MultipartFile createMockMultipartFile(String content) throws IOException {
+            return new MockMultipartFile("file.csv", content.getBytes());
+        }
     }
 
 }

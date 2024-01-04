@@ -11,17 +11,29 @@ import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PoiController.class)
@@ -39,6 +51,10 @@ public class PoiControllerTest {
     private ObjectMapper objectMapper;
 
     private static EasyRandom generator;
+
+    @Value("classpath:data/pois.csv")
+    private Resource poisCsv;
+
 
     @BeforeEach
     void setUp() {
@@ -85,6 +101,79 @@ public class PoiControllerTest {
                             .characterEncoding("UTF-8"))
                     .andExpect(status().isCreated());
 
+        }
+
+
+    }
+
+    @DisplayName("ImportController")
+    @Nested
+    class ImportFile {
+        @Test
+        @DisplayName("Should import POI from CSV file")
+        void importPoiTest() throws Exception {
+            // Given
+            InputStream inputStream = poisCsv.getInputStream();
+            String csvData = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            MockMultipartFile file = new MockMultipartFile("file", "pois.csv", "text/csv", csvData.getBytes());
+
+            PoiRequest request1 = createRandomPoiRequest();
+            PoiRequest request2 = createRandomPoiRequest();
+
+            List<PoiRequest> poisRequests = Arrays.asList(request1, request2);
+
+            Poi poi1 = new Poi(UUID.randomUUID()
+                    .toString(), request1.getName(), request1.getRadius(),
+                    request1.getLongitude(), request1.getLatitude());
+
+            Poi poi2 = new Poi(UUID.randomUUID()
+                    .toString(), request2.getName(), request2.getRadius(),
+                    request2.getLongitude(), request2.getLatitude());
+
+
+            List<Poi> pois = Arrays.asList(poi1, poi2);
+
+            // When
+            when(poiServiceMock.parseCSV(any(MultipartFile.class))).thenReturn(poisRequests);
+            when(poiServiceMock.create(any(PoiRequest.class))).thenReturn(poi1, poi2);
+
+            // Then
+            mockMvc.perform(MockMvcRequestBuilders.multipart("/poi/import")
+                            .file(file)
+                            .contentType(MediaType.MULTIPART_FORM_DATA))
+                    .andDo(print())
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$[0].poiId").exists())
+                    .andExpect(jsonPath("$[0].name").value(pois.get(0).getName()))
+                    .andExpect(jsonPath("$[0].radius").value(pois.get(0).getRadius()))
+                    .andExpect(jsonPath("$[0].longitude").value(pois.get(0).getLongitude()))
+                    .andExpect(jsonPath("$[0].latitude").value(pois.get(0).getLatitude()))
+
+                    .andExpect(jsonPath("$[1].poiId").exists())
+                    .andExpect(jsonPath("$[1].name").value(pois.get(1).getName()))
+                    .andExpect(jsonPath("$[1].radius").value(pois.get(1).getRadius()))
+                    .andExpect(jsonPath("$[1].longitude").value(pois.get(1).getLongitude()))
+                    .andExpect(jsonPath("$[1].latitude").value(pois.get(1).getLatitude()));
+        }
+
+        @Test
+        @DisplayName("Should handle exception during import pois")
+        void handleExceptionDuringImportPoisTest() throws Exception {
+            // Given
+            MultipartFile mockFile = mock(MultipartFile.class);
+
+            // Mocking service.parseCSV to throw an exception
+            when(poiServiceMock.parseCSV(any(MultipartFile.class)))
+                    .thenThrow(new RuntimeException("Simulated exception"));
+
+            // When and Then
+            mockMvc.perform(MockMvcRequestBuilders.multipart("/poi/import")
+                            .file("file", mockFile.getBytes())
+                            .contentType(MediaType.MULTIPART_FORM_DATA))
+                    .andExpect(status().isInternalServerError());
+
+            // Verify that service.parseCSV was called
+            verify(poiServiceMock, times(1)).parseCSV(any(MultipartFile.class));
         }
     }
 }

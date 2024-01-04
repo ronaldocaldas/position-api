@@ -79,7 +79,7 @@ public class PoiControllerTest {
             when(poiServiceMock.create(any(PoiRequest.class))).thenReturn(poi);
 
             // Then
-            mockMvc.perform(post("/poi")
+            mockMvc.perform(post("/poi/poi")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(convertObjectToJson(poiRequest))
                             .characterEncoding("UTF-8"))

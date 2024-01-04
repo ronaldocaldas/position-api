@@ -23,7 +23,7 @@ public class PoiController {
         this.poiService = service;
     }
 
-    @PostMapping("/poi")
+    @PostMapping("poi/poi")
     public ResponseEntity<Poi> doPost(@RequestBody @Valid PoiRequest poiRequest)
             throws Exception {
         Poi model = poiService.create(poiRequest);

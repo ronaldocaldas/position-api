@@ -93,7 +93,7 @@ public class PositionControllerTest {
         when(serviceMock.create(any(PositionRequest.class))).thenReturn(position);
 
         // Then
-        mockMvc.perform(post("/position")
+        mockMvc.perform(post("/position/position")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(convertObjectToJson(request))
                         .characterEncoding("UTF-8"))
@@ -114,7 +114,7 @@ public class PositionControllerTest {
         PositionRequest request = new PositionRequest();
 
         // Then
-        mockMvc.perform(post("/position")
+        mockMvc.perform(post("/position/position")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(convertObjectToJson(request))
                         .characterEncoding("UTF-8"))
@@ -136,7 +136,7 @@ public class PositionControllerTest {
         when(serviceMock.getAllPositions()).thenReturn(positions);
 
         // Then
-        mockMvc.perform(get("/positions")
+        mockMvc.perform(get("/position/positions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8"))
                 .andExpect(status().isOk())
@@ -182,7 +182,7 @@ public class PositionControllerTest {
             when(serviceMock.create(any(PositionRequest.class))).thenReturn(position1, position2);
 
             // Then
-            mockMvc.perform(MockMvcRequestBuilders.multipart("/importPositions")
+            mockMvc.perform(MockMvcRequestBuilders.multipart("/position/importPositions")
                             .file(file)
                             .contentType(MediaType.MULTIPART_FORM_DATA))
                     .andDo(print())
@@ -215,7 +215,7 @@ public class PositionControllerTest {
                     .thenThrow(new RuntimeException("Simulated exception"));
 
             // When and Then
-            mockMvc.perform(MockMvcRequestBuilders.multipart("/importPositions")
+            mockMvc.perform(MockMvcRequestBuilders.multipart("/position/importPositions")
                             .file("file", mockFile.getBytes())
                             .contentType(MediaType.MULTIPART_FORM_DATA))
                     .andExpect(status().isInternalServerError());

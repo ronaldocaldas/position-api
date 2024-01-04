@@ -25,20 +25,20 @@ public class PositionController {
         this.service = service;
     }
 
-    @PostMapping("/position")
+    @PostMapping("/position/position")
     public ResponseEntity<Position> doPost(@RequestBody @Valid PositionRequest positionRequest)
             throws Exception {
         Position model = service.create(positionRequest);
         return new ResponseEntity<>(model, HttpStatus.CREATED);
     }
 
-    @GetMapping("/positions")
+    @GetMapping("/position/positions")
     public ResponseEntity<List<Position>> getAllPositions() {
         List<Position> positions = service.getAllPositions();
         return new ResponseEntity<>(positions, HttpStatus.OK);
     }
 
-    @PostMapping("/importPositions")
+    @PostMapping("/position/importPositions")
     public ResponseEntity<List<Position>> importPositions(@RequestParam("file") MultipartFile file) {
         try {
             List<PositionRequest> positionRequests = service.parseCSV(file);

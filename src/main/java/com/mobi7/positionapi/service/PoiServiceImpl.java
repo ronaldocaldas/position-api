@@ -19,7 +19,7 @@ public class PoiServiceImpl implements  PoiService{
     }
 
     @Override
-    public Poi createPoi(PoiRequest poiRequest) {
+    public Poi create(PoiRequest poiRequest) {
         Poi poi = modelMapper.map(poiRequest, Poi.class);
         poi.buildId();
         return repository.save(poi);

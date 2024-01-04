@@ -4,5 +4,5 @@ import com.mobi7.positionapi.model.Poi;
 import com.mobi7.positionapi.model.PoiRequest;
 
 public interface PoiService {
-    Poi createPoi(PoiRequest poiRequest);
+    Poi create(PoiRequest poiRequest);
 }

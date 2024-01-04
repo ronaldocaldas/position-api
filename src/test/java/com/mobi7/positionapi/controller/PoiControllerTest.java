@@ -18,7 +18,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PoiControllerTest {
 
     @MockBean
-    private PoiService serviceMock;
+    private PoiService poiServiceMock;
 
     @Autowired
     private MockMvc mockMvc;
@@ -40,7 +42,7 @@ public class PoiControllerTest {
 
     @BeforeEach
     void setUp() {
-        reset(serviceMock);
+        reset(poiServiceMock);
     }
 
     @BeforeAll
@@ -70,14 +72,18 @@ public class PoiControllerTest {
         @DisplayName("Should create points of interest with success")
         void createPoiTest() throws Exception {
             // Given
-            PoiRequest poiRequest = new PoiRequest();
+            PoiRequest poiRequest = createRandomPoiRequest();
+            Poi poi = createRandomPoi();
+
+            // When
+            when(poiServiceMock.create(any(PoiRequest.class))).thenReturn(poi);
 
             // Then
             mockMvc.perform(post("/poi")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(convertObjectToJson(poiRequest))
                             .characterEncoding("UTF-8"))
-                    .andExpect(status().isBadRequest());
+                    .andExpect(status().isCreated());
 
         }
     }

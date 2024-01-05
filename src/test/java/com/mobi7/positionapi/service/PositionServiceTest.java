@@ -157,6 +157,8 @@ public class PositionServiceTest {
             assertThat(result4).isEqualTo(Arrays.asList(position1, position2, position3, position4));
         }
 
+
+
         private void assertPositionFields(Position positionSaved, PositionRequest request) {
             assertThat(positionSaved.getPositionId()).isNotNull();
             assertThat(positionSaved.getDatePosition()).isEqualTo(request.getDatePosition());

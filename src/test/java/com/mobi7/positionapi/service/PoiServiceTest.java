@@ -16,9 +16,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -71,6 +73,26 @@ public class PoiServiceTest {
         assertThat(poiSaved.getLongitude()).isEqualTo(request.getLongitude());
         assertThat(poiSaved.getLatitude()).isEqualTo(request.getLatitude());
         verify(repositoryMock, times(1)).save(any(Poi.class));
+    }
+
+    @Test
+    @DisplayName("Should get all POIs with success")
+    void getAllPoisTest() {
+        // Given
+        List<Poi> pois = Arrays.asList(createRandomPoi(), createRandomPoi());
+
+        // When
+        when(repositoryMock.findAll()).thenReturn(pois);
+
+        // Then
+        List<Poi> result = poiServiceMock.getAllPois();
+        assertEquals(2, result.size());
+        assertEquals(pois.get(0), result.get(0));
+        assertEquals(pois.get(1), result.get(1));
+    }
+
+    private Poi createRandomPoi() {
+        return generator.nextObject(Poi.class);
     }
 
     @DisplayName("ImportService")

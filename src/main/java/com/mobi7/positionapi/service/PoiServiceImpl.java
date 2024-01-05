@@ -52,6 +52,11 @@ public class PoiServiceImpl implements  PoiService {
         return poiRequests;
     }
 
+    @Override
+    public List<Poi> getAllPois() {
+        return repository.findAll();
+    }
+
     private PoiRequest parseLine(String line) {
 
         String[] values = line.split(",");

@@ -11,4 +11,7 @@ public interface PoiService {
     Poi create(PoiRequest poiRequest);
 
     List<PoiRequest> parseCSV(MultipartFile file) throws IOException;
+
+    List<Poi> getAllPois();
+
 }

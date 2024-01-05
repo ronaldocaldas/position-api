@@ -31,6 +31,13 @@ public class PoiController {
         return new ResponseEntity<>(model, HttpStatus.CREATED);
     }
 
+    @GetMapping("/poi/pois")
+    public ResponseEntity<List<Poi>> getAllPois() {
+        List<Poi> pois = poiService.getAllPois();
+        return new ResponseEntity<>(pois, HttpStatus.OK);
+    }
+
+
     @PostMapping("/poi/import")
     public ResponseEntity<List<Poi>> importPositions(@RequestParam("file") MultipartFile file) {
         try {

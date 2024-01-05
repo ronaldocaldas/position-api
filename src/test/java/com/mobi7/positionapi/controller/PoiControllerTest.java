@@ -29,9 +29,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -154,6 +156,29 @@ public class PoiControllerTest {
                     .andExpect(jsonPath("$[1].radius").value(pois.get(1).getRadius()))
                     .andExpect(jsonPath("$[1].longitude").value(pois.get(1).getLongitude()))
                     .andExpect(jsonPath("$[1].latitude").value(pois.get(1).getLatitude()));
+        }
+
+        @DisplayName("PointsOfInterestController")
+        @Nested
+        class PointsOfInterest {
+
+            @Test
+            @DisplayName("Should get all points of interest with success")
+            void getAllPoisTest() throws Exception {
+                // Given
+                List<Poi> pois = Arrays.asList(createRandomPoi(), createRandomPoi());
+
+                // When
+                when(poiServiceMock.getAllPois()).thenReturn(pois);
+
+                // Then
+                mockMvc.perform(get("/poi/pois")
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$", hasSize(2))) // Adjust based on the expected size of your list
+                        .andExpect(jsonPath("$[0].poiId").value(pois.get(0).getPoiId()))
+                        .andExpect(jsonPath("$[1].poiId").value(pois.get(1).getPoiId()));
+            }
         }
 
         @Test

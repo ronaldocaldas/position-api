@@ -114,7 +114,7 @@ public class PositionServiceTest {
 
         @Test
         @DisplayName("Should return positions filtered")
-        public void testGetFilteredPositions() {
+        void testGetFilteredPositions() {
             // Mock data
             Position position1 = Position.builder().speed(100).plate("ABC123").positionId("any").datePosition(Instant.parse("2018-12-12T02:04:03Z")).build();
             Position position2 = Position.builder().speed(100).plate("ABC123").positionId("any").datePosition(Instant.parse("2018-12-13T02:04:03Z")).build();

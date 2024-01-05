@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(PositionController.class)
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
-public class PositionControllerTest {
+class PositionControllerTest {
 
     @MockBean
     private PositionService serviceMock;

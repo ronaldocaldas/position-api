@@ -60,14 +60,15 @@ public class PositionServiceImpl implements PositionService {
         List<PositionRequest> positionRequests = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-
             // Skip the first line (header)
             br.readLine();
 
-            String line;
-            while ((line = br.readLine()) != null) {
+            String line = br.readLine(); // Use the value in the loop condition
+
+            while (line != null) {
                 PositionRequest positionRequest = parseLine(line);
                 positionRequests.add(positionRequest);
+                line = br.readLine(); // Read the next line for the next iteration
             }
         }
 

@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class PositionApiApplicationTest {
+class PositionApiApplicationTest {
 
     @Test
-    public void contextLoads() {
+    void contextLoads() {
         // This test ensures that the Spring application context loads successfully
     }
 

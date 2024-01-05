@@ -14,9 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.mobi7.positionapi.utils.PositionsUtils.isWithinRadius;
@@ -45,23 +43,17 @@ public class PoiServiceImpl implements PoiService {
 
     @Override
     public List<PoiRequest> parseCSV(MultipartFile file) throws IOException {
-        List<PoiRequest> poiRequests = new ArrayList<>();
-
         try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-
             // Skip the first line (header)
             br.readLine();
 
-            String line;
-            while ((line = br.readLine()) != null) {
-                // Parse each line and create PositionRequest objects
-                PoiRequest poiRequest = parseLine(line);
-                poiRequests.add(poiRequest);
-            }
+            return br.lines()
+                    .filter(line -> !line.trim().isEmpty()) // Skip empty lines
+                    .map(this::parseLine)
+                    .toList();
         }
-
-        return poiRequests;
     }
+
 
     @Override
     public List<Poi> getAllPois() {
@@ -79,7 +71,7 @@ public class PoiServiceImpl implements PoiService {
                     List<Position> positionsWithinRadius = listPositions.stream()
                             .filter(position -> isWithinRadius(poi.getLatitude(), poi.getLongitude(),
                                     position.getLatitude(), position.getLongitude(), poi.getRadius()))
-                            .collect(Collectors.toList());
+                            .toList();
 
                     // For all positions calculate the time
                     if (!positionsWithinRadius.isEmpty()) {
@@ -89,7 +81,7 @@ public class PoiServiceImpl implements PoiService {
                         return Stream.empty();
                     }
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
 

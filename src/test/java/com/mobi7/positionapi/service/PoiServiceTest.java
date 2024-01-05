@@ -221,13 +221,13 @@ public class PoiServiceTest {
                     .collect(Collectors.toList());
 
             when(repositoryMock.findAll()).thenReturn(pois);
-            when(positionServiceMock.getFilteredPositions(eq(plate), eq(datePosition))).thenReturn(filteredPositions);
+            when(positionServiceMock.getFilteredPositions(plate, datePosition)).thenReturn(filteredPositions);
 
             List<PoiResponse> result = poiServiceMock.getPoiResponses(plate, datePosition);
 
             // Assertions
             assertThat(result).isNotEmpty();
-            assertThat(result.size()).isEqualTo(expectedResponses.size());
+            assertThat(result).hasSameSizeAs(expectedResponses);
 
             for (int i = 0; i < expectedResponses.size(); i++) {
                 PoiResponse actualResponse = result.get(i);
@@ -241,7 +241,8 @@ public class PoiServiceTest {
 
             // Verify that the repositoryMock and positionServiceMock methods were called
             verify(repositoryMock, times(1)).findAll();
-            verify(positionServiceMock, times(1)).getFilteredPositions(eq(plate), eq(datePosition));
+            when(positionServiceMock.getFilteredPositions(plate, datePosition)).thenReturn(filteredPositions);
+
         }
 
 

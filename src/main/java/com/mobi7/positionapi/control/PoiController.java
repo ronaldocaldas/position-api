@@ -28,8 +28,7 @@ public class PoiController {
     }
 
     @PostMapping("poi/poi")
-    public ResponseEntity<Poi> doPost(@RequestBody @Valid PoiRequest poiRequest)
-            throws Exception {
+    public ResponseEntity<Poi> doPost(@RequestBody @Valid PoiRequest poiRequest) {
         Poi model = poiService.create(poiRequest);
         return new ResponseEntity<>(model, HttpStatus.CREATED);
     }

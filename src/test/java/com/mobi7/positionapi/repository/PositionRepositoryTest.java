@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class PositionRepositoryTest {
+class PositionRepositoryTest {
 
     @Autowired
     private PositionRepository positionRepository;
@@ -47,7 +47,6 @@ public class PositionRepositoryTest {
 
         // Then
         Position retrievedPosition = positionRepository.findById(position.getPositionId()).orElse(null);
-        assertThat(retrievedPosition).isNotNull();
-        assertThat(retrievedPosition).isEqualTo(position);
+        assertThat(retrievedPosition).isNotNull().isEqualTo(position);
     }
 }

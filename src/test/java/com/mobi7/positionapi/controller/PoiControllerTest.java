@@ -195,6 +195,7 @@ public class PoiControllerTest {
         class PointsInterestResponse {
 
             @Test
+            @DisplayName("Should return positions filtered")
             void testGetFilteredPositions() throws Exception {
                 // Mock data
                 List<PoiResponse> mockPoiResponses = Arrays.asList(

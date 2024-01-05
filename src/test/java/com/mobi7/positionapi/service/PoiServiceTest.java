@@ -125,7 +125,7 @@ public class PoiServiceTest {
         return generator.nextObject(Poi.class);
     }
 
-    @DisplayName("ImportService")
+    @DisplayName("Import")
     @Nested
     class ImportFile {
         @Test
@@ -152,7 +152,7 @@ public class PoiServiceTest {
     }
 
 
-    @DisplayName("PoiService")
+    @DisplayName("PoiFilter")
     @Nested
     class FilteredPositions {
 

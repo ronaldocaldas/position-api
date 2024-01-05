@@ -1,0 +1,16 @@
+[
+  {
+    "poiId": "353e9cb9-cbd7-4c43-b8df-eb027cfbea48",
+    "name": "PONTO 1",
+    "radius": 300.0,
+    "latitude": -51.47653363645077,
+    "longitude": -25.56742701740896
+  },
+  {
+    "poiId": "e873207a-6b50-4a09-815c-45e98e2f8853",
+    "name": "PONTO 2",
+    "radius": 300.0,
+    "latitude": -51.480278,
+    "longitude": -25.568056
+  }
+]

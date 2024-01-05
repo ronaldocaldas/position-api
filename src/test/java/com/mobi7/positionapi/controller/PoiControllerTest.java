@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobi7.positionapi.control.PoiController;
 import com.mobi7.positionapi.model.Poi;
 import com.mobi7.positionapi.model.PoiRequest;
+import com.mobi7.positionapi.model.PoiResponse;
 import com.mobi7.positionapi.service.PoiService;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -35,8 +37,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PoiController.class)
 @ExtendWith(SpringExtension.class)
@@ -74,6 +75,10 @@ public class PoiControllerTest {
         return generator.nextObject(PoiRequest.class);
     }
 
+    private PoiResponse createRandomPoiResponse() {
+        return generator.nextObject(PoiResponse.class);
+    }
+
     private Poi createRandomPoi() {
         return generator.nextObject(Poi.class);
     }
@@ -81,6 +86,10 @@ public class PoiControllerTest {
     private String convertObjectToJson(Object object) throws JsonProcessingException, JsonProcessingException {
         return objectMapper.writeValueAsString(object);
     }
+
+
+
+
 
     @DisplayName("PointsInterestController")
     @Nested
@@ -179,6 +188,34 @@ public class PoiControllerTest {
                         .andExpect(jsonPath("$[0].poiId").value(pois.get(0).getPoiId()))
                         .andExpect(jsonPath("$[1].poiId").value(pois.get(1).getPoiId()));
             }
+        }
+
+        @DisplayName("PointsInterestResponseController")
+        @Nested
+        class PointsInterestResponse {
+
+            @Test
+            void testGetFilteredPositions() throws Exception {
+                // Mock data
+                List<PoiResponse> mockPoiResponses = Arrays.asList(
+                        createRandomPoiResponse()
+                );
+
+                // Specify the expected behavior of the PoiService mock
+                when(poiServiceMock.getPoiResponses(anyString(), any(LocalDate.class)))
+                        .thenReturn(mockPoiResponses);
+
+                // Perform the GET request and validate the response
+                mockMvc.perform(get("/poi/response")
+                                .param("plate", "ABC123")
+                                .param("datePosition", "01/01/2022"))
+                        .andExpect(status().isOk())
+                        .andExpect(content().json(objectMapper.writeValueAsString(mockPoiResponses)));
+
+                // You can add more tests with different parameters as needed
+            }
+
+
         }
 
         @Test

@@ -1,0 +1,200 @@
+{
+	"info": {
+		"_postman_id": "8d165b9b-51da-4f83-863a-8f1d83edc89e",
+		"name": "position-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32162960"
+	},
+	"item": [
+		{
+			"name": "Create Poi",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"your_request_body_here\": \"example_data\"\n}"
+				},
+				"url": {
+					"raw": "http://{{base_url}}/poi/poi",
+					"protocol": "http",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"poi",
+						"poi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Pois",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{base_url}}/poi/pois",
+					"protocol": "http",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"poi",
+						"pois"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Poi Responses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{base_url}}/poi/response?plate=your_plate_value&datePosition=your_date_value",
+					"protocol": "http",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"poi",
+						"response"
+					],
+					"query": [
+						{
+							"key": "plate",
+							"value": "your_plate_value"
+						},
+						{
+							"key": "datePosition",
+							"value": "your_date_value"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Import Pois",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/path/to/your/csv/file.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{base_url}}/poi/import",
+					"protocol": "http",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"poi",
+						"import"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Positions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{base_url}}/position/positions",
+					"protocol": "http",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"position",
+						"positions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Positions by filter",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{base_url}}/position/positions",
+					"protocol": "http",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"position",
+						"positions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Poi Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"your_request_body_here\": \"example_data\"\n}"
+				},
+				"url": {
+					"raw": "http://{{base_url}}/poi/poi",
+					"protocol": "http",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"poi",
+						"poi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Import positions",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{base_url}}/position/import",
+					"protocol": "http",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"position",
+						"import"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

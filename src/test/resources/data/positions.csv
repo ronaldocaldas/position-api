@@ -1,6 +1,12 @@
 placa,data_posicao,velocidade,longitude,latitude,ignicao
-TESTE001,Wed Dec 12 2018 00:04:03 GMT-0200 (Hora oficial do Brasil),0,-51.469891,-25.3649141,false
-TESTE001,Wed Dec 12 2018 00:34:06 GMT-0200 (Hora oficial do Brasil),0,-51.4699098,-25.3649175,false
-TESTE001,Wed Dec 12 2018 01:04:09 GMT-0200 (Hora oficial do Brasil),0,-51.4699588,-25.3649551,false
-TESTE001,Wed Dec 12 2018 01:34:12 GMT-0200 (Hora oficial do Brasil),0,-51.4698871,-25.3649138,false
-TESTE001,Wed Dec 12 2018 02:04:15 GMT-0200 (Hora oficial do Brasil),0,-51.4699223,-25.364885,false
+TESTE001,Wed Dec 12 2018 00:04:03 GMT-0200 (Hora oficial do Brasil),0,-25.567300,-51.476300,false
+TESTE001,Wed Dec 12 2018 00:34:06 GMT-0200 (Hora oficial do Brasil),0,-25.567600,-51.476700,false
+TESTE002,Wed Dec 12 2018 01:04:09 GMT-0200 (Hora oficial do Brasil),0,-25.567800,-51.476400,false
+TESTE002,Wed Dec 12 2018 01:34:12 GMT-0200 (Hora oficial do Brasil),0,-25.567200,-51.476900,false
+TESTE002,Wed Dec 12 2018 02:04:15 GMT-0200 (Hora oficial do Brasil),0,-25.567500,-51.476600,false
+TESTE003,Wed Dec 12 2018 02:34:18 GMT-0200 (Hora oficial do Brasil),0,-25.568000,-51.480000,false
+TESTE003,Wed Dec 12 2018 03:04:21 GMT-0200 (Hora oficial do Brasil),0,-25.568100,-51.480100,false
+TESTE004,Wed Dec 12 2018 03:34:24 GMT-0200 (Hora oficial do Brasil),0,-25.567700,-51.480300,false
+TESTE004,Wed Dec 12 2018 04:04:27 GMT-0200 (Hora oficial do Brasil),0,-25.567800,-51.480400,false
+TESTE005,Wed Dec 12 2018 04:34:30 GMT-0200 (Hora oficial do Brasil),0,-25.568200,-51.479800,false
+TESTE005,Wed Dec 12 2018 05:04:33 GMT-0200 (Hora oficial do Brasil),0,-25.568300,-51.479900,false

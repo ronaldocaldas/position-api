@@ -2,13 +2,16 @@ package com.mobi7.positionapi.control;
 
 import com.mobi7.positionapi.model.Poi;
 import com.mobi7.positionapi.model.PoiRequest;
+import com.mobi7.positionapi.model.PoiResponse;
 import com.mobi7.positionapi.service.PoiService;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +40,15 @@ public class PoiController {
         return new ResponseEntity<>(pois, HttpStatus.OK);
     }
 
+    @GetMapping("/poi/response")
+    public ResponseEntity<List<PoiResponse>> getFilteredPositions(
+            @RequestParam(required = false) String plate,
+            @RequestParam(required = false)
+            @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate datePosition) {
 
+        List<PoiResponse> filteredPositions = poiService.getPoiResponses(plate, datePosition);
+        return new ResponseEntity<>(filteredPositions, HttpStatus.OK);
+    }
     @PostMapping("/poi/import")
     public ResponseEntity<List<Poi>> importPositions(@RequestParam("file") MultipartFile file) {
         try {

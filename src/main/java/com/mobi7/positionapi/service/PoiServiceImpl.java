@@ -2,7 +2,10 @@ package com.mobi7.positionapi.service;
 
 import com.mobi7.positionapi.model.Poi;
 import com.mobi7.positionapi.model.PoiRequest;
+import com.mobi7.positionapi.model.PoiResponse;
+import com.mobi7.positionapi.model.Position;
 import com.mobi7.positionapi.repository.PoiRepository;
+import com.mobi7.positionapi.utils.DateUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,19 +13,27 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.mobi7.positionapi.utils.PositionsUtils.isWithinRadius;
 
 
 @Service("poiService")
-public class PoiServiceImpl implements  PoiService {
+public class PoiServiceImpl implements PoiService {
     private final ModelMapper modelMapper;
 
     private final PoiRepository repository;
 
-    public PoiServiceImpl(ModelMapper modelMapper, PoiRepository repository) {
+    private final PositionService positionService;
+
+    public PoiServiceImpl(ModelMapper modelMapper, PoiRepository repository, PositionService positionService) {
         this.modelMapper = modelMapper;
         this.repository = repository;
+        this.positionService = positionService;
     }
 
     @Override
@@ -56,6 +67,31 @@ public class PoiServiceImpl implements  PoiService {
     public List<Poi> getAllPois() {
         return repository.findAll();
     }
+
+    @Override
+    public List<PoiResponse> getPoiResponses(String plate, LocalDate datePosition) {
+        List<Poi> listPois = getAllPois();
+        List<Position> listPositions = positionService.getFilteredPositions(plate, datePosition);
+
+        return listPois.stream()
+                .flatMap(poi -> {
+                    // Map all positions inside the area of Poi
+                    List<Position> positionsWithinRadius = listPositions.stream()
+                            .filter(position -> isWithinRadius(poi.getLatitude(), poi.getLongitude(),
+                                    position.getLatitude(), position.getLongitude(), poi.getRadius()))
+                            .collect(Collectors.toList());
+
+                    // For all positions calculate the time
+                    if (!positionsWithinRadius.isEmpty()) {
+                        String timeSpentFormatted = DateUtils.calculateAndFormatTotalDuration(positionsWithinRadius);
+                        return Stream.of(new PoiResponse(poi.getPoiId(), poi.getName(), plate, datePosition, timeSpentFormatted));
+                    } else {
+                        return Stream.empty();
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
 
     private PoiRequest parseLine(String line) {
 

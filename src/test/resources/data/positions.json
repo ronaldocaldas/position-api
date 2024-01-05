@@ -1,0 +1,101 @@
+[
+  {
+    "positionId": "1daf6af2-2dfc-4019-a8bf-c24bf4b4b1ae",
+    "plate": "TESTE001",
+    "datePosition": "2018-12-12T02:04:03Z",
+    "speed": 0,
+    "latitude": -51.4763,
+    "longitude": -25.5673,
+    "ignition": false
+  },
+  {
+    "positionId": "d44fe572-59a2-41e9-8f58-46a7fc766a3a",
+    "plate": "TESTE001",
+    "datePosition": "2018-12-12T02:34:06Z",
+    "speed": 0,
+    "latitude": -51.4767,
+    "longitude": -25.5676,
+    "ignition": false
+  },
+  {
+    "positionId": "786f2bd2-8b3f-4077-a450-ace03a908807",
+    "plate": "TESTE002",
+    "datePosition": "2018-12-12T03:04:09Z",
+    "speed": 0,
+    "latitude": -51.4764,
+    "longitude": -25.5678,
+    "ignition": false
+  },
+  {
+    "positionId": "cdde1ed0-291d-40c4-aa5b-4f630949eb2a",
+    "plate": "TESTE002",
+    "datePosition": "2018-12-12T03:34:12Z",
+    "speed": 0,
+    "latitude": -51.4769,
+    "longitude": -25.5672,
+    "ignition": false
+  },
+  {
+    "positionId": "8e4f0126-d82e-4820-b58b-8aed68bc301b",
+    "plate": "TESTE002",
+    "datePosition": "2018-12-12T04:04:15Z",
+    "speed": 0,
+    "latitude": -51.4766,
+    "longitude": -25.5675,
+    "ignition": false
+  },
+  {
+    "positionId": "4bd43c19-6374-45fb-84e9-60b7c90f7b47",
+    "plate": "TESTE003",
+    "datePosition": "2018-12-12T04:34:18Z",
+    "speed": 0,
+    "latitude": -51.48,
+    "longitude": -25.568,
+    "ignition": false
+  },
+  {
+    "positionId": "c94dbcf7-ec28-4c18-86c7-92d4156f0b82",
+    "plate": "TESTE003",
+    "datePosition": "2018-12-12T05:04:21Z",
+    "speed": 0,
+    "latitude": -51.4801,
+    "longitude": -25.5681,
+    "ignition": false
+  },
+  {
+    "positionId": "da6d37a6-dc91-4506-8492-87128859e277",
+    "plate": "TESTE004",
+    "datePosition": "2018-12-12T05:34:24Z",
+    "speed": 0,
+    "latitude": -51.4803,
+    "longitude": -25.5677,
+    "ignition": false
+  },
+  {
+    "positionId": "ba52dd5b-833e-4275-b2c3-c203b79a1a6b",
+    "plate": "TESTE004",
+    "datePosition": "2018-12-12T06:04:27Z",
+    "speed": 0,
+    "latitude": -51.4804,
+    "longitude": -25.5678,
+    "ignition": false
+  },
+  {
+    "positionId": "79885458-7f49-42f4-b105-7a6e1ac574c1",
+    "plate": "TESTE005",
+    "datePosition": "2018-12-12T06:34:30Z",
+    "speed": 0,
+    "latitude": -51.4798,
+    "longitude": -25.5682,
+    "ignition": false
+  },
+  {
+    "positionId": "aa7144e6-02e1-4902-b2fd-a167131d7558",
+    "plate": "TESTE005",
+    "datePosition": "2018-12-12T07:04:33Z",
+    "speed": 0,
+    "latitude": -51.4799,
+    "longitude": -25.5683,
+    "ignition": false
+  }
+]

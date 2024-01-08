@@ -33,10 +33,17 @@ To set up and run the project, follow the steps below:
 5. Run the frontend application and view the summarized information.
 
 
-### Importing Database Files
+## Swagger Documentation
 
-Importing Postman Collection
-To test and interact with the backend API, you can import the Postman collection file position-api.postman_collection.json located in the test/resources/data folder.
+The API is documented using Swagger, which provides an interactive documentation interface. You can explore and test the API endpoints using the Swagger UI.
+
+### Swagger UI
+
+After setting up and running the project, you can access the Swagger UI documentation at [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html). This interface allows you to interactively explore the available endpoints, their request parameters, and response structures.
+
+### Importing Postman Collection
+
+To test and interact with the backend API, you can also import the Postman collection file `position-api.postman_collection.json` located in the `test/resources/data` folder.
 
 For testing purposes, you can import sample data into the application. Place the files `pois.csv` and `positions.csv` in the `test/resources/data` folder.
 
